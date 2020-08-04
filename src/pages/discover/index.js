@@ -1,5 +1,7 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { renderRoutes } from 'react-router-config';
+
+import request from '@/services/request.js'
 
 import { 
   discoverMenu
@@ -12,6 +14,11 @@ import {
 import { NavLink } from 'react-router-dom';
 
 export default memo(function Discover(props) {
+
+  useEffect(() => {
+    
+  }, [])
+
   const { route } = props;
   return (
       <DiscoverWrapper>        
