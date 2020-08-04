@@ -18,7 +18,7 @@ export default memo(function AppHeeader() {
     // 前三个是路由跳转，后三个是外部链接
     if (index < 3) {
       return (
-        <NavLink to={item.link} exact>
+        <NavLink to={item.link} >
           {item.title}
           <i className="sprite_01 icon"></i>
         </NavLink>

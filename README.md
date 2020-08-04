@@ -90,6 +90,21 @@ const routes = [
 export default routes;
 ```
 
+#### 对官网路由进行优化
+
+原官网进入域名时，域名匹配的是发现页面，但这个时候重定向到发现页面的路由会更好点
+
+相关配置
+
+```js
+import React from 'react'
+import { Redirect } from 'react-router-dom'
+{ path:"/", exact:true, render: () =>(  <Redirect  to="/discover" />  ) },
+
+```
+
+
+
 ## 三、遇到的BUG与解决
 
 ## 四、各个模块与页面
@@ -106,4 +121,80 @@ export default routes;
 	搜索框，开发中心，登录
 
 ```
+
+### 4.2发现页面
+
+#### 子路由
+
+配置：
+
+```js
+{
+    path: '/discover', 
+    component: Discover,
+    routes: [
+      {
+        path: "/discover",
+        render: () => (
+          <Redirect to="/discover/recommend" />
+        )
+      },
+      {
+        path: "/discover/recommend",
+        component: Recommend
+      },
+      {
+        path: "/discover/ranking",
+        component: Ranking
+      },
+      {
+        path: "/discover/songs",
+        component: Songs
+      },
+      {
+        path: "/discover/djradio",
+        component: Djradio
+      },
+      {
+        path: "/discover/artist",
+        component: Artist
+      },
+      {
+        path: "/discover/album",
+        component: Album
+      },
+    ]
+  },
+```
+
+拿到路由，在discover页面进行站位
+
+- 通过props可以拿到配置信息route
+- 再用renderRoutes站位
+
+```jsx
+export default memo(function Discover(props) {
+  const { route } = props;
+  return (
+      <DiscoverWrapper>        
+        <div className="top">
+          <TopMenu className="wrap-v1">
+            {
+              discoverMenu.map((item,index)=>{
+                return (
+                  <div className="item" key={item.title}>
+                    <NavLink to={item.link}>{item.title}</NavLink>
+                  </div>
+                )
+              })
+            }
+          </TopMenu>
+        </div>
+        {renderRoutes(route.routes)} 
+      </DiscoverWrapper>
+  )
+})
+```
+
+### 4.3推荐页面
 
