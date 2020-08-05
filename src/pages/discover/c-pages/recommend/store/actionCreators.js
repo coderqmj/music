@@ -10,7 +10,7 @@ const changeTopBannerAction = (res) => ({
 export const getTopBannerAction = () => {
   return dispatch => {
     getTopBanners().then(res => {
-      // console.log(res)
+      console.log(res)
       dispatch(changeTopBannerAction(res))
     })
   }

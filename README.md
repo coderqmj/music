@@ -103,6 +103,65 @@ import { Redirect } from 'react-router-dom'
 
 ```
 
+### 2.2.axios二次封装
+
+servicces/config.js
+
+```js
+const devBaseURL = "http://123.207.32.32:9001/";
+const proBaseURL = "https://production.org";
+export const BASE_URL = process.env.NODE_ENV === 'development' ? devBaseURL: proBaseURL;
+
+export const TIMEOUT = 5000;
+
+```
+
+services/request.js
+
+```js
+import axios from 'axios';
+
+import { BASE_URL, TIMEOUT } from "./config";
+
+const instance = axios.create({
+  baseURL: BASE_URL,
+  timeout: TIMEOUT
+});
+
+instance.interceptors.request.use(config => {
+  // 1.发送网络请求时, 在界面的中间位置显示Loading的组件
+
+  // 2.某一些请求要求用户必须携带token, 如果没有携带, 那么直接跳转到登录页面
+
+  // 3.params/data序列化的操作
+  console.log("请求被拦截");
+
+  return config;
+}, err => {
+
+});
+
+instance.interceptors.response.use(res => {
+  return res.data;
+}, err => {
+  if (err && err.response) {
+    switch (err.response.status) {
+      case 400:
+        console.log("请求错误");
+        break;
+      case 401:
+        console.log("未授权访问");
+        break;
+      default:
+        console.log("其他错误信息");
+    }
+  }
+  return err;
+});
+
+export default instance;
+```
+
 
 
 ## 三、遇到的BUG与解决
@@ -197,4 +256,154 @@ export default memo(function Discover(props) {
 ```
 
 ### 4.3推荐页面
+
+#### redux整合
+
+- 在每个页面创建属于自己的store，并导出reducer
+- 在src/store/reducer.js导入并合并各个页面的reducer
+- 在src/store/index.js里面导入合并的reducer，用中间件处理，并且导出store
+- 在App.js里面用Provider共享所有数据
+
+store/reducer.js
+
+- 合并reducer
+
+```js
+import { combineReducers } from "redux";
+
+import { reducer as recommendReducer } from "../pages/discover/c-pages/recommend/store";
+
+const cReducer = combineReducers({
+  recommend: recommendReducer
+})
+
+export default cReducer;
+```
+
+store/index.js
+
+- 导出store，用于共享数据
+
+```js
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from 'redux-thunk'
+import reducer from "./reducer";
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const store = createStore(reducer, composeEnhancers(
+  applyMiddleware(thunk)
+))
+
+export default store;
+```
+
+App.js
+
+- 数据共享
+
+```js
+import store from '@/store'
+
+<Provider store={store}>
+      <HashRouter>
+        <AppHeader />
+        {renderRoutes(routes)}
+        <AppFooter />
+      </HashRouter>
+ </Provider>
+```
+
+
+
+#### recommend的redux书写
+
+reducer.js:
+
+```js
+import * as actionTypes from './constants';
+
+const defaultState = {
+  topBanners: []
+}
+
+function reducer(state = defaultState, action) {
+  switch (action.type) {
+    case actionTypes.CHANGE_TOP_BANNERS:
+      return {...state,topBanners: action.topBanners}
+    default:
+      return state;
+  }
+}
+
+export default reducer;
+```
+
+store/index.js
+
+```js
+import reducer from './reducer'
+
+export {
+  reducer
+}
+```
+
+store/actionCreators.js
+
+```js
+import * as actionTypes from './constants';
+
+import { getTopBanners } from '@/services/recommend'
+
+const changeTopBannerAction = (res) => ({
+  type: actionTypes.CHANGE_TOP_BANNERS,
+  topBanners: res.banners
+})
+
+export const getTopBannerAction = () => {
+  return dispatch => {
+    getTopBanners().then(res => {
+      console.log(res)
+      dispatch(changeTopBannerAction(res))
+    })
+  }
+}
+```
+
+recommend/index.js
+
+```js
+import React, { memo, useEffect } from 'react'
+import {connect, useSelector, useDispatch } from "react-redux";
+
+import { getTopBannerAction } from "./store/actionCreators";
+
+// t通过redux hooks
+function Recommend(props) {
+  // 组件和redux关联：获取数据和进行操作
+
+  // 第一个参数回调函数，
+  const {topBanners} = useSelector(state => ({
+    topBanners: state.recommend.topBanners
+  }))
+
+  // hook
+  const dispatch = useDispatch();
+
+  // 发送网络请求
+  useEffect(() => {
+    dispatch(getTopBannerAction());
+  }, [dispatch])
+
+  return (
+    <div>
+      <h2>Recommend Page</h2>
+      <h2>数据：{topBanners.length}</h2>
+    </div>
+  )
+}
+
+export default memo(Recommend);
+```
 

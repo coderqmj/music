@@ -1,14 +1,18 @@
 import React, { memo, useEffect } from 'react'
-import { connect, useSelector, useDispatch } from "react-redux";
+import {connect, useSelector, useDispatch } from "react-redux";
 
 import { getTopBannerAction } from "./store/actionCreators";
 
 // t通过redux hooks
 function Recommend(props) {
   // 组件和redux关联：获取数据和进行操作
+
+  // 第一个参数回调函数，
   const {topBanners} = useSelector(state => ({
     topBanners: state.recommend.topBanners
   }))
+
+  // hook
   const dispatch = useDispatch();
 
   // 发送网络请求
@@ -23,8 +27,6 @@ function Recommend(props) {
     </div>
   )
 }
-
-
 
 export default memo(Recommend);
 
