@@ -1,30 +1,17 @@
-import React, { memo, useEffect } from 'react'
-import {connect, useSelector, useDispatch } from "react-redux";
+import React, { memo } from 'react'
 
-import { getTopBannerAction } from "./store/actionCreators";
+import { RecommendWrapper } from "./style";
+import TopBanner from './c-cpns/top-banner'
+
 
 // t通过redux hooks
 function Recommend(props) {
-  // 组件和redux关联：获取数据和进行操作
 
-  // 第一个参数回调函数，
-  const {topBanners} = useSelector(state => ({
-    topBanners: state.recommend.topBanners
-  }))
-
-  // hook
-  const dispatch = useDispatch();
-
-  // 发送网络请求
-  useEffect(() => {
-    dispatch(getTopBannerAction());
-  }, [dispatch])
 
   return (
-    <div>
-      <h2>Recommend Page</h2>
-      <h2>数据：{topBanners.length}</h2>
-    </div>
+    <RecommendWrapper>
+      <TopBanner></TopBanner>
+    </RecommendWrapper>
   )
 }
 
@@ -33,6 +20,7 @@ export default memo(Recommend);
 // 通过connect，连接组件和redux，请求太多不推荐
 
 // function Recommend(props) {
+
 
 //   const { getBanners, topBanners } = props;
 //   useEffect(() => {

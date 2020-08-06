@@ -2,6 +2,10 @@
 
 ### 1.1.划分项目结构
 
+#### 组件内部代码划分
+
+内部数据state -> redux相关 -> 其他hooks -> 其他逻辑 -> 返回JSX 
+
 ### 1.2.样式重置
 
 使用了第三方库：`yarn add normalize`
@@ -162,7 +166,15 @@ instance.interceptors.response.use(res => {
 export default instance;
 ```
 
+### 2.3使用immutableJS对修改数据进行优化
 
+- 使用Map包裹state
+- 使用state.set修改数据
+- 通过get取数据
+
+### 2.4合并reducer优化——redux-immutable
+
+- 使用数据也要进行get
 
 ## 三、遇到的BUG与解决
 
