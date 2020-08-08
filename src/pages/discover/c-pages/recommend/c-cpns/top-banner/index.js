@@ -42,6 +42,7 @@ export default memo(function TopBanner() {
 
   // 业务逻辑
   // 1.取出当前轮播图
+  // console.log(topBanners)
   const bgImage = topBanners[currentIndex] && topBanners[currentIndex].imageUrl + "?imageView&blur=40x20"
 
 
