@@ -419,3 +419,8 @@ function Recommend(props) {
 export default memo(Recommend);
 ```
 
+### 4.4定义工具函数
+
+#### getCount：对播放数量进行格式化
+
+#### getSizeImage：对图片大小进行限制

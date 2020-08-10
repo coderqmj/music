@@ -1,9 +1,10 @@
 import * as actionTypes from './constants';
 
-import { 
+import {
   getTopBanners,
   getHotRecommend,
-  getNewAlbum
+  getNewAlbum,
+  getTopList
 } from '@/services/recommend'
 
 
@@ -47,8 +48,42 @@ export const getNewAlbumAction = (limit) => {
   return dispatch => {
     getNewAlbum(limit).then(res => {
       // const albums = res.albums;
-      console.log(res)
+      // console.log(res)
       dispatch(changeNewAlbumAction(res))
+    })
+  }
+}
+
+// 排行榜相关
+const changeUpRankingAction = (res) => ({
+  type: actionTypes.CHANGE_UP_RANKING,
+  upRanking: res.playlist
+})
+const changeNewRankingAction = (res) => ({
+  type: actionTypes.CHANGE_NEW_RANKING,
+  newRanking: res.playlist
+})
+const changeOriginRankingAction = (res) => ({
+  type: actionTypes.CHANGE_ORIGIN_RANKING,
+  originRanking: res.playlist
+})
+export const getTopListAction = (idx) => {
+  return dispatch => {
+    getTopList(idx).then(res => {
+      console.log(res)
+      switch (idx) {
+        case 0:
+          dispatch(changeUpRankingAction(res))
+          break;
+        case 2:
+          dispatch(changeNewRankingAction(res))
+          break;
+        case 3:
+          dispatch(changeOriginRankingAction(res))
+          break;
+        default:
+      }
+      // dispatch(changeTopListAction(res))
     })
   }
 }

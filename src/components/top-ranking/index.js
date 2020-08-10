@@ -1,0 +1,45 @@
+import React, { memo } from 'react'
+
+import { getSizeImage } from "@/utils/format-utils.js";
+
+import { TopRankingWrapper } from "./style";
+export default memo(function TopRanking(props) {
+  const { info } = props;
+  const {tracks = []} = info;
+  // console.log(info)
+  return (
+    <TopRankingWrapper>
+      <div className="header">
+        <div className="image">
+          <img src={getSizeImage(info.coverImgUrl,50)} alt="" />
+          <a href="/todo" className="image_cover">邱模建2020/08/10</a>
+        </div>
+        <div className="info">
+          <a href="/todo">{info.name}</a>
+          <div>
+            <button className="btn play sprite_02"></button>
+            <button className="btn favor sprite_02"></button>
+          </div>
+        </div>
+      </div>
+      <div className="list">
+        {
+          tracks.slice(0,10).map((item,index)=>{
+            return (
+              <div key={item.id} className="list-item">
+                <div className="rank">{index + 1}</div>
+                <div className="name">{item.name}</div>
+                <div className="operate">
+                  <button className="btn sprite_02 play"></button>
+                  <button className="btn sprite_icon2 addto"></button>
+                  <button className="btn sprite_02 favor"></button>
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
+      <div className="footer"></div>
+    </TopRankingWrapper>
+  )
+})
