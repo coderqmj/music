@@ -10,6 +10,9 @@ import TopBanner from './c-cpns/top-banner'
 import HotRecommend from './c-cpns/hot-recommend'
 import NewAlbum from './c-cpns/new-album'
 import RecommendRanking from './c-cpns/recommend-ranking'
+import UserLogin from './c-cpns/user-login'
+import HotAnchor from './c-cpns/hot-anchor'
+import SettleSinger from './c-cpns/settle-singer'
 
 
 // t通过redux hooks
@@ -26,6 +29,9 @@ function Recommend(props) {
           <RecommendRanking />
         </RecommendLeft>
         <RecommendRight>
+          <UserLogin />
+          <HotAnchor />
+          <SettleSinger />
 
         </RecommendRight>
       </Content>
