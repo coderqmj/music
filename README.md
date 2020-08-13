@@ -178,6 +178,18 @@ export default instance;
 
 ## 三、遇到的BUG与解决
 
+#### 请求取值问题
+
+明明请求到数据，但是多个层级经常会undefined，比如获取歌曲信息时（currentSong.al.picUrl），明明已经拿到并且打印出来歌曲信息了，但是给img图片填写url时无法获取到，原因是？
+
+解决办法： const picUrl = currentSong.al && currentSong.al.picUrl
+
+img src={getSizeImage(picUrl,35)} alt="" />
+
+#### 拖动进度条会弹回原来进度再到目标进度
+
+更新当前时间会有一定的延迟，需要在监听函数onAfterChange里面重新设置当前时间
+
 ## 四、各个模块与页面
 
 ### 4.1导航栏
@@ -424,3 +436,92 @@ export default memo(Recommend);
 #### getCount：对播放数量进行格式化
 
 #### getSizeImage：对图片大小进行限制
+
+#### formatTime: 对歌曲世间进行格式化
+
+### 4.5播放歌曲
+
+- 需要歌曲详情信息，id，歌名，歌词，歌曲时长等
+- 使用audio，获取到音频的url
+
+#### 获取url拼接id
+
+```js
+export function getPlaySong(id) {
+  return `https://music.163.com/song/media/outer/url?id=${id}.mp3`
+}
+```
+
+#### 播放
+
+```js
+const audioRef = useRef()
+  
+const playMusic = () => {
+    audioRef.current.src = getPlaySong(currentSong.id);
+    audioRef.current.play()
+  }
+
+<audio ref={audioRef} />
+
+```
+
+#### 监听进度
+
+- 根据audio自带的onTimeUpdate
+- antd里面value代表进度条的值，总共100，将当前时间/总时间*100即可以得出进度条的进度
+- currentTime是随着世间改变的，会自动更新
+
+```js
+ const [currentTime, setCurrentTime] = useState(0)
+  
+const showCurrentTime = formatDate(currentTime, "mm:ss")
+const progress = (currentTime/duration)*100
+
+// 监听播放
+  const timeUpdate = (e) => {
+    setCurrentTime(e.target && e.target.currentTime * 1000)
+  }
+<Slider defaultValue={30} value={progress}/>
+<audio ref={audioRef} onTimeUpdate={e => timeUpdate(e)} />
+```
+
+#### 改变进度
+
+- 点击改变进度，拖动改变进度，可以改变事件
+- 监听滑块的点击与滚动，value/100*duration就可以
+
+```js
+  const sliderChange = useCallback((value) => {
+    setIsChange(true)
+    setProgress(value)
+  }, [])
+
+  // 监听滑块
+  const sliderAfterChange = useCallback((value) => {
+     const currentTime = value*duration/100/1000
+    audioRef.current.currentTime = currentTime
+    setCurrentTime(currentTime*1000)
+    setIsChange(false)
+  }, [duration])
+```
+
+
+
+#### 播放与暂停
+
+- audio的pause与play
+- 设置播放状态isPlaying,根据状态改变样式，与播放暂停
+- 将设置src设置在useEffect里面，依赖currentSong不用每次都重新设置，更换currentSong在设置
+
+```js
+ useEffect(() => {
+    audioRef.current.src = getPlaySong(currentSong.id);
+  },[currentSong])
+
+const playMusic = () => {
+    isPlaying?audioRef.current.pause() : audioRef.current.play()
+    setIsPlaying(!isPlaying)
+  }
+```
+
