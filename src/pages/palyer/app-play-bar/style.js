@@ -40,7 +40,7 @@ export const Control = styled.div`
     height: 36px;
     margin: 0 8px;
     cursor: pointer;
-    background-position: 0 ${props => props.isPlaying ? "-165px": "-204px"};
+    background-position: 0 ${props => props.isPlaying ? "-165px" : "-204px"};
   }
 
   .next {
@@ -144,7 +144,16 @@ export const Operator = styled.div`
     }
 
     .loop {
-      background-position: -3px -344px;
+      background-position: ${props => {
+    switch (props.sequence) {
+      case 1:
+        return "-66px -248px"
+      case 2:
+        return "-66px -344px"
+      default:
+        return "-3px -344px";
+    }
+  }} 
     }
 
     .playlist {
