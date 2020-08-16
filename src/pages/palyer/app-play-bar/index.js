@@ -174,7 +174,9 @@ export default memo(function AppPlayerBar() {
           <div className="right sprite_player">
             <button className="sprite_player btn volume"></button>
             <button className="sprite_player btn loop" onClick={e => changeSequence()}></button>
-            <button className="sprite_player btn playlist">{playList.length}</button>
+            <button className="sprite_player btn playlist">
+              {playList.length}
+            </button>
           </div>
         </Operator>
       </div>

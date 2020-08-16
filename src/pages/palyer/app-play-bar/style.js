@@ -135,6 +135,8 @@ export const Operator = styled.div`
   }
 
   .right {
+    display: flex;
+    align-items:center;
     width: 126px;
     padding-left: 13px;
     background-position: -147px -248px;
@@ -157,6 +159,9 @@ export const Operator = styled.div`
     }
 
     .playlist {
+      padding-left: 18px;
+      text-align: center;
+      color: #ccc;
       width: 59px;
       background-position: -42px -68px;
     }
