@@ -32,3 +32,14 @@ export function getTopList(idx) {
     }
   })
 }
+
+// 获取入住歌手+s
+export function getSettleSinger(limit,cat) {
+  return request({
+    url: '/artist/list',
+    params: {
+      cat,
+      limit
+    }
+  })
+}

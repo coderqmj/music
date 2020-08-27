@@ -4,7 +4,8 @@ import {
   getTopBanners,
   getHotRecommend,
   getNewAlbum,
-  getTopList
+  getTopList,
+  getSettleSinger,
 } from '@/services/recommend'
 
 
@@ -54,6 +55,12 @@ export const getNewAlbumAction = (limit) => {
   }
 }
 
+// 入住歌手的action
+const changeSettleSingerAction = (res) => ({
+  type: actionTypes.CHANGE_SETTLE_SINGER,
+  settleSinger: res.artists
+})
+
 // 排行榜相关
 const changeUpRankingAction = (res) => ({
   type: actionTypes.CHANGE_UP_RANKING,
@@ -84,6 +91,15 @@ export const getTopListAction = (idx) => {
         default:
       }
       // dispatch(changeTopListAction(res))
+    })
+  }
+}
+
+export const getSettleSingers = () => {
+  return dispatch => {
+    getSettleSinger(5,5001).then(res => {
+      console.log(res)
+      dispatch(changeSettleSingerAction(res))
     })
   }
 }
