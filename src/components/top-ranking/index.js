@@ -57,7 +57,7 @@ import { TopRankingWrapper } from './style';
 
 export default memo(function TopRanking(props) {
   // props和state
-  const { info } = props;
+  const { info = {} } = props;
   const { tracks = [] } = info;
 
   // redux hooks
